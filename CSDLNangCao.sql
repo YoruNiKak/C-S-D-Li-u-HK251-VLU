@@ -183,3 +183,25 @@ INSERT INTO BAOTRI VALUES
 ('BT000001', 'P101', '2025-09-05', N'Hỏng bóng đèn trần', N'Đã xử lý', 'NV0003'),
 ('BT000002', 'P102', '2025-09-07', N'Rò rỉ nước lavabo', N'Đang xử lý', 'NV0001');
 
+-- CƠ BẢN
+--1. Liệt kê toàn bộ sinh viên
+SELECT * FROM SINHVIEN;
+--2. Hiển thị danh sách sinh viên đang học
+SELECT MaSV, HoTen, Lop, Khoa 
+FROM SINHVIEN
+WHERE TrangThai = N'Đang học';
+--3. Hiển thị danh sách khu ký túc xá theo giới tính
+SELECT MaKhu, TenKhu, GioiTinh, SoTang 
+FROM KHU_KTX
+ORDER BY GioiTinh;
+--4. Hiển thị hợp đồng còn hiệu lực
+SELECT MaHD, MaSV, MaPhong, NgayBatDau, NgayKetThuc 
+FROM HOPDONG
+WHERE TrangThai = N'Còn hiệu lực';
+
+-- TRUNG BÌNH
+--5. Liệt kê sinh viên cùng thông tin phòng đang thuê
+SELECT s.HoTen, s.Email, p.MaKhu, hd.MaPhong ,p.SoPhong
+FROM SINHVIEN s
+JOIN HOPDONG hd ON hd.MaSV = s.MaSV 
+JOIN PHONG p ON p.MaPhong = hd.MaPhong;
