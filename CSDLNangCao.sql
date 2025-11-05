@@ -1,7 +1,31 @@
-﻿CREATE DATABASE QuanLyKTX;
+﻿CREATE DATABASE QuanLyKTX
+ON PRIMARY
+(
+    NAME = QuanLyKTX_Data,
+    FILENAME = '.mdf',
+    SIZE = 20MB,          
+    MAXSIZE = 100MB,      
+    FILEGROWTH = 5MB      
+),
+FILEGROUP FG_SinhVien
+(
+    NAME = QuanLyKTX_SinhVien,
+    FILENAME = '.ndf',
+    SIZE = 20MB,
+    MAXSIZE = 200MB,
+    FILEGROWTH = 10MB
+)
+LOG ON
+(
+    NAME = QuanLyKTX_Log,
+    FILENAME = '.ldf',
+    SIZE = 6MB,           
+    MAXSIZE = 20MB,       
+    FILEGROWTH = 2MB     
+);
 GO
 
-USE QuanLyKTX;
+USE QuanLyKTX
 GO
 
 CREATE TABLE KHU_KTX (
@@ -114,7 +138,7 @@ INSERT INTO PHONG VALUES
 INSERT INTO NHANVIEN VALUES
 ('NV0001', N'Lê Văn Kỹ', N'Nam', N'Quản lý khu', '0911222333', 'K01'),
 ('NV0002', N'Nguyễn Thị Hoa', N'Nữ', N'Quản lý khu', '0911444555', 'K02'),
-('NV0003', N'Phạm Quốc Dũng', N'Nam', N'Nhân viên bảo trì', '0911555666', NULL);
+('NV0003', N'Phạm Quốc Dũng', N'Nam', N'Nhân viên bảo trì', '0911555666', 'K01');
 
 INSERT INTO SINHVIEN VALUES
 ('SV0001', N'Nguyễn Văn A', '2003-05-10', N'Nam', N'D21CQCN01', N'Công nghệ thông tin', '0912345678', 'vana@vanlanguni.vn', N'Đang học'),
@@ -140,14 +164,11 @@ INSERT INTO SINHVIEN VALUES
 
 INSERT INTO HOPDONG VALUES
 ('HD000001', 'SV0001', 'P101', '2025-01-01', '2025-12-31', 500000, N'Còn hiệu lực'),
-('HD000002', 'SV0002', 'P201', '2025-02-01', '2025-12-31', 500000, N'Còn hiệu lực'),
 ('HD000003', 'SV0003', 'P102', '2025-03-01', '2025-12-31', 400000, N'Còn hiệu lực'),
 ('HD000004', 'SV0004', 'P202', '2025-01-15', '2025-12-31', 500000, N'Còn hiệu lực'),
-('HD000005', 'SV0005', 'P103', '2025-01-01', '2025-12-31', 500000, N'Hết hạn'),
 ('HD000006', 'SV0006', 'P203', '2025-03-01', '2025-12-31', 400000, N'Còn hiệu lực'),
 ('HD000007', 'SV0007', 'P101', '2025-01-01', '2025-12-31', 400000, N'Còn hiệu lực'),
 ('HD000008', 'SV0008', 'P202', '2025-02-01', '2025-12-31', 500000, N'Còn hiệu lực'),
-('HD000009', 'SV0009', 'P102', '2025-01-01', '2025-12-31', 500000, N'Hết hạn'),
 ('HD000010', 'SV0010', 'P203', '2025-04-01', '2025-12-31', 500000, N'Còn hiệu lực'),
 ('HD000011', 'SV0011', 'P103', '2025-01-01', '2025-12-31', 400000, N'Còn hiệu lực'),
 ('HD000012', 'SV0012', 'P201', '2025-02-01', '2025-12-31', 400000, N'Còn hiệu lực'),
@@ -156,9 +177,13 @@ INSERT INTO HOPDONG VALUES
 ('HD000015', 'SV0015', 'P102', '2025-02-01', '2025-12-31', 500000, N'Còn hiệu lực'),
 ('HD000016', 'SV0016', 'P203', '2025-03-01', '2025-12-31', 400000, N'Còn hiệu lực'),
 ('HD000017', 'SV0017', 'P103', '2025-01-01', '2025-12-31', 500000, N'Còn hiệu lực'),
+('HD000002', 'SV0002', 'P201', '2025-02-01', '2025-12-31', 500000, N'Hết hạn'),
+('HD000005', 'SV0005', 'P103', '2025-01-01', '2025-12-31', 500000, N'Hết hạn'),
+('HD000009', 'SV0009', 'P102', '2025-01-01', '2025-12-31', 500000, N'Hết hạn'),
 ('HD000018', 'SV0018', 'P101', '2025-04-01', '2025-12-31', 500000, N'Hết hạn'),
-('HD000019', 'SV0019', 'P202', '2025-01-01', '2025-12-31', 400000, N'Còn hiệu lực'),
-('HD000020', 'SV0020', 'P203', '2025-02-01', '2025-12-31', 500000, N'Còn hiệu lực');
+('HD000019', 'SV0019', 'P202', '2025-01-01', '2025-12-31', 400000, N'Hết hạn'),
+('HD000020', 'SV0020', 'P203', '2025-02-01', '2025-12-31', 500000, N'Hết hạn');
+
 
 INSERT INTO DIENNUOC VALUES
 ('DN000001', 'P101', 9, 2025, 250, 120),
@@ -183,25 +208,154 @@ INSERT INTO BAOTRI VALUES
 ('BT000001', 'P101', '2025-09-05', N'Hỏng bóng đèn trần', N'Đã xử lý', 'NV0003'),
 ('BT000002', 'P102', '2025-09-07', N'Rò rỉ nước lavabo', N'Đang xử lý', 'NV0001');
 
--- CƠ BẢN
---1. Liệt kê toàn bộ sinh viên
-SELECT * FROM SINHVIEN;
---2. Hiển thị danh sách sinh viên đang học
-SELECT MaSV, HoTen, Lop, Khoa 
+-- Cơ bản
+-- Liệt kê danh sách sinh viên đang học tại ký túc xá.
+SELECT MaSV, HoTen, Lop, Khoa, GioiTinh, TrangThai
 FROM SINHVIEN
 WHERE TrangThai = N'Đang học';
---3. Hiển thị danh sách khu ký túc xá theo giới tính
-SELECT MaKhu, TenKhu, GioiTinh, SoTang 
-FROM KHU_KTX
-ORDER BY GioiTinh;
---4. Hiển thị hợp đồng còn hiệu lực
-SELECT MaHD, MaSV, MaPhong, NgayBatDau, NgayKetThuc 
-FROM HOPDONG
-WHERE TrangThai = N'Còn hiệu lực';
+    
+-- Hiển thị thông tin các phòng thuộc khu K01 có giá thuê lớn hơn 800,000.
+SELECT MaPhong, SoPhong, GiaPhong, SucChua
+FROM PHONG
+WHERE MaKhu = 'K01' AND GiaPhong > 800000;
 
--- TRUNG BÌNH
---5. Liệt kê sinh viên cùng thông tin phòng đang thuê
-SELECT s.HoTen, s.Email, p.MaKhu, hd.MaPhong ,p.SoPhong
-FROM SINHVIEN s
-JOIN HOPDONG hd ON hd.MaSV = s.MaSV 
-JOIN PHONG p ON p.MaPhong = hd.MaPhong;
+-- JOIN
+-- Liệt kê thông tin sinh viên và phòng mà họ đang thuê.
+SELECT sv.MaSV, sv.HoTen, p.MaPhong, p.GiaPhong, hd.NgayBatDau, hd.NgayKetThuc
+FROM SINHVIEN sv
+JOIN HOPDONG hd ON sv.MaSV = hd.MaSV
+JOIN PHONG p ON hd.MaPhong = p.MaPhong;
+
+-- Hiển thị hóa đơn điện nước kèm theo tên sinh viên và trạng thái thanh toán.
+SELECT sv.HoTen, hdg.MaHD, hdn.MaHDN, hdn.NgayLap, hdn.TongTien, hdn.TrangThai
+FROM SINHVIEN sv
+JOIN HOPDONG hdg ON sv.MaSV = hdg.MaSV
+JOIN HOADON hdn ON hdg.MaHD = hdn.MaHD;
+
+-- Subquery
+-- Tìm sinh viên có tiền cọc hợp đồng cao hơn mức cọc trung bình của tất cả sinh viên.
+SELECT sv.MaSV, sv.HoTen, hd.TienCoc
+FROM SINHVIEN sv
+JOIN HOPDONG hd ON sv.MaSV = hd.MaSV
+WHERE hd.TienCoc > (SELECT AVG(TienCoc) FROM HOPDONG);
+
+-- Liệt kê các phòng chưa có yêu cầu bảo trì nào.
+SELECT MaPhong, SoPhong, GiaPhong
+FROM PHONG
+WHERE MaPhong NOT IN (SELECT MaPhong FROM BAOTRI);
+
+-- Tính tổng số sinh viên đang thuê ở từng khu ký túc xá.
+SELECT k.TenKhu, COUNT(hd.MaSV) AS SoSinhVien
+FROM KHU_KTX k
+JOIN PHONG p ON k.MaKhu = p.MaKhu
+JOIN HOPDONG hd ON p.MaPhong = hd.MaPhong
+GROUP BY k.TenKhu;
+
+-- Tính tổng tiền hóa đơn từng hợp đồng và chỉ hiển thị những hợp đồng có tổng tiền > 1,200,000.
+SELECT hdn.MaHD, SUM(hdn.TongTien) AS TongTienHoaDon
+FROM HOADON hdn
+GROUP BY hdn.MaHD
+HAVING SUM(hdn.TongTien) > 1200000;
+
+-- Liệt kê sinh viên, phòng, tổng số tiền đã thanh toán và phương thức thanh toán.
+SELECT sv.HoTen, p.MaPhong, SUM(tt.SoTien) AS TongThanhToan, MAX(tt.PhuongThuc) AS HinhThuc
+FROM SINHVIEN sv
+JOIN HOPDONG hd ON sv.MaSV = hd.MaSV
+JOIN HOADON hdn ON hd.MaHD = hdn.MaHD
+JOIN THANHTOAN tt ON hdn.MaHDN = tt.MaHDN
+JOIN PHONG p ON hd.MaPhong = p.MaPhong
+GROUP BY sv.HoTen, p.MaPhong;
+
+-- Thống kê số lượng yêu cầu bảo trì theo từng nhân viên phụ trách.
+SELECT nv.HoTen AS NhanVien, COUNT(bt.MaBT) AS YeuCauBaoTri
+FROM NHANVIEN nv
+LEFT JOIN BAOTRI bt ON nv.MaNV = bt.MaNV
+GROUP BY nv.HoTen;
+
+-- CHECK (SoLuongDangO <= SucChua)
+CREATE TRIGGER trg_KiemTraSucChuaPhong
+ON HOPDONG
+AFTER INSERT
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    DECLARE @Loi NVARCHAR(200);
+
+    -- Nếu có phòng nào vượt sức chứa sau khi thêm
+    IF EXISTS (
+        SELECT 1
+        FROM PHONG p
+        JOIN (
+            SELECT MaPhong, COUNT(*) AS SoNguoiDangO
+            FROM HOPDONG
+            WHERE TrangThai = N'Còn hiệu lực'
+            GROUP BY MaPhong
+        ) hd ON p.MaPhong = hd.MaPhong
+        WHERE hd.SoNguoiDangO > p.SucChua
+    )
+    BEGIN
+        SET @Loi = N'Phòng đã vượt quá sức chứa, không thể thêm hợp đồng mới!';
+        ROLLBACK TRANSACTION;
+        RAISERROR(@Loi, 16, 1);
+        RETURN;
+    END;
+END;
+GO
+
+-- Xem thông tin phòng còn nhiêu slot
+DROP VIEW V_ThongTinPhong;
+CREATE VIEW V_ThongTinPhong
+AS
+SELECT
+    P.MaPhong,
+    P.MaKhu,
+    P.SoPhong,
+    P.SucChua,
+    P.GiaPhong,
+    ISNULL(SoLuongDangO, 0) AS SoLuongDangO,
+    (P.SucChua - ISNULL(SoLuongDangO, 0)) AS ChoTrong
+FROM PHONG AS P
+LEFT JOIN (
+    SELECT
+        MaPhong,
+        COUNT(*) AS SoLuongDangO
+    FROM HOPDONG
+    WHERE GETDATE() BETWEEN NgayBatDau AND NgayKetThuc
+      AND (TrangThai IS NULL OR TrangThai <> N'Đã hủy')
+    GROUP BY MaPhong
+) AS HienTai ON HienTai.MaPhong = P.MaPhong;
+
+SELECT * FROM V_ThongTinPhong;
+
+CREATE FUNCTION fn_PhongConTrong
+(
+    @MaPhong CHAR(5),
+    @TuNgay DATE,
+    @DenNgay DATE
+)
+RETURNS BIT
+AS
+BEGIN
+    DECLARE @ConTrong BIT = 0;
+    DECLARE @SucChua INT;
+    DECLARE @SoNguoiDangO INT;
+
+    SELECT @SucChua = SucChua FROM dbo.PHONG WHERE MaPhong = @MaPhong;
+
+    IF @SucChua IS NULL RETURN 0;
+
+    SELECT @SoNguoiDangO = COUNT(*)
+    FROM dbo.HOPDONG
+    WHERE MaPhong = @MaPhong
+      AND NOT (NgayKetThuc < @TuNgay OR NgayBatDau > @DenNgay)
+      AND (TrangThai IS NULL OR TrangThai <> N'Đã hủy');
+
+    IF @SoNguoiDangO < @SucChua
+        SET @ConTrong = 1;
+
+    RETURN @ConTrong;
+END;
+GO
+SELECT fn_PhongConTrong('P102', '2025-11-01', '2025-11-30') AS ConTrong;
+
