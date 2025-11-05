@@ -132,8 +132,8 @@ INSERT INTO PHONG VALUES
 ('P102', 'K01', 102, 4, 800000, NULL),
 ('P103', 'K01', 103, 4, 850000, NULL),
 ('P201', 'K02', 201, 3, 900000, NULL),
-('P202', 'K02', 202, 3, 900000, NULL),
-('P203', 'K02', 203, 3, 950000, NULL);
+('P202', 'K02', 202, 5, 900000, NULL),
+('P203', 'K02', 203, 5, 950000, NULL);
 
 INSERT INTO NHANVIEN VALUES
 ('NV0001', N'Lê Văn Kỹ', N'Nam', N'Quản lý khu', '0911222333', 'K01'),
@@ -357,5 +357,9 @@ BEGIN
     RETURN @ConTrong;
 END;
 GO
-SELECT fn_PhongConTrong('P102', '2025-11-01', '2025-11-30') AS ConTrong;
+SELECT 
+    MaPhong,
+    dbo.fn_PhongConTrong(MaPhong, '2025-11-01', '2025-11-30') AS ConTrong
+FROM PHONG
+WHERE MaPhong IN ('P101', 'P102', 'P103', 'P201', 'P202', 'P203');
 
